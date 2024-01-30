@@ -1,5 +1,7 @@
 package com.example.pokemon.api;
 
+import java.util.ArrayList;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -35,8 +37,21 @@ public class UserController {
 
     @PostMapping("/newUser")
     public User newUser(@RequestBody User user) {
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        return userRepository.save(user);
+
+        Iterable<User> users = userRepository.findAll();
+        ArrayList<String> userNameList = new ArrayList<String>();
+
+        for (User u : users) {
+            userNameList.add(u.getUsername());
+        }
+
+        if (userNameList.contains(user.getUsername())) {
+            System.out.println(user.getUsername() + " finns redan.");
+            return user;
+        } else {
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+            return userRepository.save(user);
+        }
     }
 
 }
