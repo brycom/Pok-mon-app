@@ -11,7 +11,7 @@ import jakarta.persistence.Id;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    UUID uuid;
+    int id;
     String username;
     String password;
     String firstName;
@@ -28,8 +28,9 @@ public class User {
         this.lastName = lastName;
     }
 
-    public UUID getUuid() {
-        return uuid;
+    public int getId() {
+
+        return id;
     }
 
     public String getUsername() {
