@@ -9,9 +9,9 @@ import jakarta.persistence.Id;
 
 @Entity
 public class User {
+    @GeneratedValue
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    int id;
+    UUID id;
     String username;
     String password;
     String firstName;
@@ -22,13 +22,14 @@ public class User {
     }
 
     public User(String username, String password, String firstName, String lastName) {
+        id = UUID.randomUUID();
         this.username = username;
         this.password = password;
         this.firstName = firstName;
         this.lastName = lastName;
     }
 
-    public int getId() {
+    public UUID getId() {
 
         return id;
     }
