@@ -1,5 +1,7 @@
 package com.example.pokemon.model;
 
+import java.util.UUID;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -11,6 +13,25 @@ public class PokiDeck {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     int id;
-    int userId;
+    UUID userId;
+
+    public PokiDeck(UUID userId) {
+        this.userId = userId;
+    }
+
+    public PokiDeck() {
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public UUID getUserId() {
+        return userId;
+    }
+
+    public void setUserId(UUID userId) {
+        this.userId = userId;
+    }
 
 }
