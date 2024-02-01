@@ -35,7 +35,7 @@ public class PokiDeckService {
 
             return pokiList;
         } else {
-            System.out.println("Du är dum i huvudet");
+            System.out.println("Mig lurar du inte!");
 
             return null;
         }

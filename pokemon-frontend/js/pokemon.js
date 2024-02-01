@@ -46,6 +46,18 @@ function getPokiInfo(url) {
     });
 }
 
+function yourPokiDeck(deckId) {
+  fetch("http://localhost:8080/api/pokiDeck/" + deckId)
+    .then((res) => {
+      return res.json();
+    })
+    .then((data) => {
+      data.forEach((poki) => {
+        getPokiInfo(poki.url);
+      });
+    });
+}
+
 function displayPokiSpec(pokemon) {}
 
 searchBtn.addEventListener("click", () => {
@@ -62,4 +74,5 @@ searchBtn.addEventListener("click", () => {
   searchField.value = "";
 });
 
-getPikiList();
+//getPikiList();
+yourPokiDeck(2);

@@ -9,8 +9,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
+
 import com.example.pokemon.model.Pokemon;
 import com.example.pokemon.model.PokiDeck;
 import com.example.pokemon.model.User;
@@ -36,28 +37,24 @@ public class pokiDeckController {
     }
 
     @GetMapping("/{deckId}")
-    public List<Pokemon> getDeck(@PathVariable int deckId) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null) {
-            Optional<User> userO = userRepository.findByUsername(authentication.getName());
-            User user = userO.orElse(null);
+    public List<Pokemon> getDeck(/* @AuthenticationPrincipal UserDetails userDetails, */ @PathVariable int deckId) {
 
-            return pokiDeckService.getPockiDeck(user.getId(), deckId);
-        } else {
-            System.out.println("du måste logga in först");
-            return null;
-        }
+        Optional<User> userO = userRepository.findByUsername("mathias");
+        User user = userO.orElse(null);
+
+        return pokiDeckService.getPockiDeck(user.getId(), deckId);
+
     }
 
     @PostMapping("/newDeck")
-    public PokiDeck newDeck() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Optional<User> userO = userRepository.findByUsername(authentication.getName());
+    public PokiDeck newDeck(@AuthenticationPrincipal UserDetails userDetails) {
+
+        Optional<User> userO = userRepository.findByUsername(userDetails.getUsername());
         User user = userO.orElse(null);
         PokiDeck pokiDeck = new PokiDeck(user.getId());
         pokiDeckRepository.save(pokiDeck);
 
-        return null;
+        return pokiDeck;
     }
 
 }
