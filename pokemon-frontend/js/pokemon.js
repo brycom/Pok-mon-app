@@ -15,13 +15,13 @@ function getPokiList() {
     .then((data) => {
       let pokilist = data.results;
       pokilist.forEach((poki) => {
-        getPokiInfo(poki.url);
+        getPokiInfo(poki);
       });
     });
 }
 
-function getPokiInfo(url) {
-  fetch(url)
+function getPokiInfo(pokemon) {
+  fetch(pokemon.url)
     .then((res) => {
       return res.json();
     })
@@ -36,8 +36,8 @@ function getPokiInfo(url) {
       h2.innerText = data.name;
       li.append(img, h2);
       listOfPokemons.appendChild(li);
-      addToMyDeck(url, li);
-      console.log(data);
+      addToMyDeck(pokemon, li);
+      deleteFromMyDeck(pokemon, li);
     })
     .catch((err) => {
       console.error("något gick fel", err);
@@ -48,15 +48,56 @@ function getPokiInfo(url) {
 }
 
 function yourPokiDeck(deckId) {
+  listOfPokemons.innerHTML = "";
   fetch("http://localhost:8080/api/pokiDeck/" + deckId)
     .then((res) => {
       return res.json();
     })
     .then((data) => {
       data.forEach((poki) => {
-        getPokiInfo(poki.url);
+        getPokiInfo(poki);
       });
     });
+}
+function addToMyDeck(pokemon, parent) {
+  let addbtn = document.createElement("button");
+
+  addbtn.innerText = "Lägg till i mina pokemons";
+
+  parent.appendChild(addbtn);
+  const bodyData = {
+    url: pokemon.url,
+    deckId: 2
+  };
+
+  addbtn.addEventListener("click", () => {
+    fetch("http://localhost:8080/api/pokiDeck/addPokemon", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(bodyData)
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+      });
+  });
+}
+
+function deleteFromMyDeck(pokemon, parent) {
+  let deletebtn = document.createElement("button");
+  deletebtn.id = pokemon.id;
+  deletebtn.innerText = "Ta bort från min deck";
+  parent.appendChild(deletebtn);
+
+  deletebtn.addEventListener("click", () => {
+    fetch("http://localhost:8080/api/pokiDeck/deletePokemon/" + pokemon.id, {
+      method: "DELETE"
+    });
+    console.log("Deleted");
+    listOfPokemons.removeChild(parent);
+  });
 }
 
 searchBtn.addEventListener("click", () => {
@@ -88,32 +129,5 @@ searchField.addEventListener("keypress", (e) => {
     searchField.value = "";
   }
 });
-
-function addToMyDeck(pokemon, parent) {
-  let btn = document.createElement("button");
-
-  btn.innerText = "Lägg till i mina pokemons";
-
-  parent.appendChild(btn);
-  const bodyData = {
-    url: pokemon,
-    deckId: 2
-  };
-
-  btn.addEventListener("click", () => {
-    fetch("http://localhost:8080/api/pokiDeck/addPokemon", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(bodyData)
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data);
-      });
-  });
-}
-
 //getPokiList();
 yourPokiDeck(2);

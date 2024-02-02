@@ -9,4 +9,6 @@ public interface pokemonRepository extends CrudRepository<Pokemon, Integer> {
 
     List<Pokemon> findByDeckId(int deckId);
 
+    Pokemon findByUrl(String url);
+
 }
