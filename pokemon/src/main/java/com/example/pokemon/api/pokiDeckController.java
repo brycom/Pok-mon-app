@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -16,6 +17,7 @@ import com.example.pokemon.model.Pokemon;
 import com.example.pokemon.model.PokiDeck;
 import com.example.pokemon.model.User;
 import com.example.pokemon.repository.UserRepository;
+import com.example.pokemon.repository.pokemonRepository;
 import com.example.pokemon.repository.pokiDeckRepository;
 
 import com.example.pokemon.service.PokiDeckService;
@@ -28,12 +30,14 @@ public class pokiDeckController {
     public final PokiDeckService pokiDeckService;
     public final UserRepository userRepository;
     public final pokiDeckRepository pokiDeckRepository;
+    public final pokemonRepository pokemonRepository;
 
     public pokiDeckController(PokiDeckService pokiDeckService, UserRepository userRepository,
-            com.example.pokemon.repository.pokiDeckRepository pokiDeckRepository) {
+            com.example.pokemon.repository.pokiDeckRepository pokiDeckRepository, pokemonRepository pokemonRepository) {
         this.pokiDeckService = pokiDeckService;
         this.userRepository = userRepository;
         this.pokiDeckRepository = pokiDeckRepository;
+        this.pokemonRepository = pokemonRepository;
     }
 
     @GetMapping("/{deckId}")
@@ -55,6 +59,14 @@ public class pokiDeckController {
         pokiDeckRepository.save(pokiDeck);
 
         return pokiDeck;
+    }
+
+    @PostMapping("/addPokemon")
+    public Pokemon addPokemon(@RequestBody Pokemon Pokemon) {
+        Pokemon p = new Pokemon(Pokemon.getUrl(), 2);
+        pokemonRepository.save(p);
+
+        return p;
     }
 
 }

@@ -4,7 +4,7 @@ body.appendChild(listOfPokemons);
 let searchField = document.getElementById("searchField");
 let searchBtn = document.getElementById("searchBtn");
 
-function getPikiList() {
+function getPokiList() {
   fetch("https://pokeapi.co/api/v2/pokemon/")
     .then((response) => {
       if (!response.ok) {
@@ -36,6 +36,7 @@ function getPokiInfo(url) {
       h2.innerText = data.name;
       li.append(img, h2);
       listOfPokemons.appendChild(li);
+      addToMyDeck(url, li);
       console.log(data);
     })
     .catch((err) => {
@@ -58,12 +59,10 @@ function yourPokiDeck(deckId) {
     });
 }
 
-function displayPokiSpec(pokemon) {}
-
 searchBtn.addEventListener("click", () => {
   if (searchField.value == "") {
     listOfPokemons.innerHTML = "";
-    getPikiList();
+    getPekiList();
     console.log("i if");
   } else {
     console.log("i else");
@@ -74,5 +73,47 @@ searchBtn.addEventListener("click", () => {
   searchField.value = "";
 });
 
-//getPikiList();
+searchField.addEventListener("keypress", (e) => {
+  if (e.key == "Enter") {
+    if (searchField.value == "") {
+      listOfPokemons.innerHTML = "";
+      getPokiList();
+      console.log("i if");
+    } else {
+      console.log("i else");
+      listOfPokemons.innerHTML = "";
+      getPokiInfo("https://pokeapi.co/api/v2/pokemon/" + searchField.value);
+      console.log(searchField.value);
+    }
+    searchField.value = "";
+  }
+});
+
+function addToMyDeck(pokemon, parent) {
+  let btn = document.createElement("button");
+
+  btn.innerText = "Lägg till i mina pokemons";
+
+  parent.appendChild(btn);
+  const bodyData = {
+    url: pokemon,
+    deckId: 2
+  };
+
+  btn.addEventListener("click", () => {
+    fetch("http://localhost:8080/api/pokiDeck/addPokemon", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(bodyData)
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+      });
+  });
+}
+
+//getPokiList();
 yourPokiDeck(2);
