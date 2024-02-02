@@ -45,7 +45,7 @@ public class pokiDeckController {
     }
 
     @GetMapping("/{deckId}")
-    public List<Pokemon> getDeck(/* @AuthenticationPrincipal UserDetails userDetails, */ @PathVariable int deckId) {
+    public List<Pokemon> getDeck(/* @AuthenticationPrincipal UserDetails userDetails */ @PathVariable int deckId) {
 
         Optional<User> userO = userRepository.findByUsername("mathias");
         User user = userO.orElse(null);
@@ -82,8 +82,8 @@ public class pokiDeckController {
         return p;
     }
 
-    @PatchMapping("/addComment")
-    public Optional<Pokemon> addComment(@RequestParam int id, @RequestParam String comment) {
+    @PatchMapping("/addComment/{id}")
+    public Optional<Pokemon> addComment(@PathVariable int id, @RequestBody String comment) {
         Optional<Pokemon> pokemon = pokemonRepository.findById(id);
         Pokemon p = pokemon.orElse(null);
         p.setComment(comment);

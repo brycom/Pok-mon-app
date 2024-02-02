@@ -30,14 +30,15 @@ function getPokiInfo(pokemon) {
       let h2 = document.createElement("h2");
       let img = document.createElement("img");
       let info = document.createElement("p");
-      info.innerText = data.id;
+      info.innerText = pokemon.comment;
 
       img.src = data.sprites.front_default;
       h2.innerText = data.name;
-      li.append(img, h2);
+      li.append(img, h2, info);
       listOfPokemons.appendChild(li);
       addToMyDeck(pokemon, li);
       deleteFromMyDeck(pokemon, li);
+      addComment(pokemon, li);
     })
     .catch((err) => {
       console.error("något gick fel", err);
@@ -97,6 +98,34 @@ function deleteFromMyDeck(pokemon, parent) {
     });
     console.log("Deleted");
     listOfPokemons.removeChild(parent);
+  });
+}
+
+function addComment(pokemon, parent) {
+  let editBtn = document.createElement("button");
+  editBtn.innerText = "Lägg till komentar";
+  parent.appendChild(editBtn);
+
+  editBtn.addEventListener("click", () => {
+    console.log(pokemon.id);
+    let comment = document.createElement("textarea");
+    let submit = document.createElement("button");
+    submit.innerText = "Lägg till";
+    parent.append(comment, submit);
+
+    submit.addEventListener("click", () => {
+      fetch("http://localhost:8080/api/pokiDeck/addComment/" + pokemon.id, {
+        method: "PATCH",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ comment: comment.value })
+      })
+        .then((response) => {
+          return response.json();
+        })
+        .then((data) => {
+          console.log(data);
+        });
+    });
   });
 }
 
