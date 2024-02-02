@@ -12,6 +12,7 @@ public class Pokemon {
     int id;
     String url;
     int deckId;
+    String comment;
 
     public Pokemon() {
     }
@@ -19,6 +20,14 @@ public class Pokemon {
     public Pokemon(String url, int deckId) {
         this.url = url;
         this.deckId = deckId;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 
     public int getId() {
