@@ -1,8 +1,15 @@
-let body = document.body;
+let body = document.getElementById("content");
 let listOfPokemons = document.createElement("ul");
 body.appendChild(listOfPokemons);
 let searchField = document.getElementById("searchField");
 let searchBtn = document.getElementById("searchBtn");
+let homeBtn = document.getElementById("home");
+let myDecks = document.getElementById("myDecks");
+let newDeckBtn = document.getElementById("newDeck");
+let newDeckContainer = document.getElementById("newDeckContainer");
+let decks = [];
+
+let pokemonList = [];
 
 function getPokiList() {
   fetch("https://pokeapi.co/api/v2/pokemon/")
@@ -30,21 +37,54 @@ function getPokiInfo(pokemon) {
       let h2 = document.createElement("h2");
       let img = document.createElement("img");
       let info = document.createElement("p");
+      let dropDownContainer = document.createElement("div");
+      let dropDownBtn = document.createElement("button");
+      let dropDown = document.createElement("div");
+      dropDownContainer.className = "dropDown";
+      dropDown.className = "dropdownContent";
+      dropDownBtn.id = "dropDownBtn";
+      dropDownBtn.innerText = "Menu";
+
       info.innerText = pokemon.comment;
+      dropDownContainer.append(dropDownBtn, dropDown);
 
       img.src = data.sprites.front_default;
       h2.innerText = data.name;
-      li.append(img, h2, info);
+      li.append(h2, img, dropDownContainer, info);
       listOfPokemons.appendChild(li);
-      addToMyDeck(pokemon, li);
-      deleteFromMyDeck(pokemon, li);
-      addComment(pokemon, li);
+      if (pokemonList.includes(pokemon)) {
+        deleteFromMyDeck(pokemon, li, dropDown);
+        addComment(pokemon, info, dropDown);
+      } else {
+        console.log("det här borde du inte se????");
+        addToMyDeck(pokemon, dropDown);
+      }
     })
     .catch((err) => {
       console.error("något gick fel", err);
       let li = document.createElement("li");
       li.innerText = "Tyvärr finns det ingen Pokemon med det namnet";
       listOfPokemons.appendChild(li);
+    });
+}
+
+function getAllDecks() {
+  myDecks.innerHTML = "";
+  fetch("http://localhost:8080/api/pokiDeck/decks")
+    .then((response) => {
+      return response.json();
+    })
+    .then((data) => {
+      data.forEach((deck) => {
+        decks.push(deck);
+        let btn = document.createElement("button");
+        btn.innerText = deck.name;
+        btn.className = "nav-item";
+        myDecks.appendChild(btn);
+        btn.addEventListener("click", () => {
+          yourPokiDeck(deck.id);
+        });
+      });
     });
 }
 
@@ -56,41 +96,43 @@ function yourPokiDeck(deckId) {
     })
     .then((data) => {
       data.forEach((poki) => {
+        pokemonList.push(poki);
         getPokiInfo(poki);
       });
     });
 }
 function addToMyDeck(pokemon, parent) {
-  let addbtn = document.createElement("button");
+  decks.forEach((deck) => {
+    let addbtn = document.createElement("button");
+    addbtn.innerText = "Lägg till i " + deck.name;
 
-  addbtn.innerText = "Lägg till i mina pokemons";
+    parent.appendChild(addbtn);
+    const bodyData = {
+      url: pokemon.url,
+      deckId: deck.id
+    };
 
-  parent.appendChild(addbtn);
-  const bodyData = {
-    url: pokemon.url,
-    deckId: 2
-  };
-
-  addbtn.addEventListener("click", () => {
-    fetch("http://localhost:8080/api/pokiDeck/addPokemon", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(bodyData)
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data);
-      });
+    addbtn.addEventListener("click", () => {
+      fetch("http://localhost:8080/api/pokiDeck/addPokemon", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(bodyData)
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          console.log(data);
+        });
+    });
   });
 }
 
-function deleteFromMyDeck(pokemon, parent) {
+function deleteFromMyDeck(pokemon, parent, dropDown) {
   let deletebtn = document.createElement("button");
-  deletebtn.id = pokemon.id;
+
   deletebtn.innerText = "Ta bort från min deck";
-  parent.appendChild(deletebtn);
+  dropDown.appendChild(deletebtn);
 
   deletebtn.addEventListener("click", () => {
     fetch("http://localhost:8080/api/pokiDeck/deletePokemon/" + pokemon.id, {
@@ -101,13 +143,12 @@ function deleteFromMyDeck(pokemon, parent) {
   });
 }
 
-function addComment(pokemon, parent) {
+function addComment(pokemon, parent, dropDown) {
   let editBtn = document.createElement("button");
   editBtn.innerText = "Lägg till komentar";
-  parent.appendChild(editBtn);
+  dropDown.appendChild(editBtn);
 
   editBtn.addEventListener("click", () => {
-    console.log(pokemon.id);
     let comment = document.createElement("textarea");
     let submit = document.createElement("button");
     submit.innerText = "Lägg till";
@@ -117,13 +158,13 @@ function addComment(pokemon, parent) {
       fetch("http://localhost:8080/api/pokiDeck/addComment/" + pokemon.id, {
         method: "PATCH",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ comment: comment.value })
+        body: comment.value
       })
         .then((response) => {
           return response.json();
         })
         .then((data) => {
-          console.log(data);
+          parent.innerText = data.comment;
         });
     });
   });
@@ -133,9 +174,7 @@ searchBtn.addEventListener("click", () => {
   if (searchField.value == "") {
     listOfPokemons.innerHTML = "";
     getPekiList();
-    console.log("i if");
   } else {
-    console.log("i else");
     listOfPokemons.innerHTML = "";
     getPokiInfo("https://pokeapi.co/api/v2/pokemon/" + searchField.value);
     console.log(searchField.value);
@@ -158,5 +197,35 @@ searchField.addEventListener("keypress", (e) => {
     searchField.value = "";
   }
 });
-//getPokiList();
-yourPokiDeck(2);
+
+homeBtn.addEventListener("click", () => {
+  getPokiList();
+});
+
+newDeckBtn.addEventListener("click", () => {
+  if (newDeckContainer.querySelector("input")) {
+    newDeckContainer.removeChild(newDeckContainer.querySelector("input"));
+  } else {
+    let input = document.createElement("input");
+    let button = document.createElement("button");
+    button.innerText = "Lägg till";
+    input.setAttribute("type", "text");
+    input.setAttribute("placeholder", "Namn:");
+    newDeckContainer.append(input, button);
+    button.addEventListener("click", () => {
+      fetch("http://localhost:8080/api/pokiDeck/newDeck/" + input.value, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        }
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          console.log(data);
+          getAllDecks();
+        });
+    });
+  }
+});
+getPokiList();
+getAllDecks();

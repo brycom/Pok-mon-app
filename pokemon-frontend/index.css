@@ -1,0 +1,135 @@
+body {
+  margin: 0;
+  padding: 0;
+  background-color: gold;
+}
+
+nav {
+  top: 0;
+  display: flex;
+  height: 55px;
+  width: 100%;
+  background-color: rgb(61, 69, 175);
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 12px 18px rgba(0, 0, 0, 0.3);
+  position: fixed;
+}
+
+.nav-item {
+  height: 35px;
+  margin: 0 5px;
+  padding: 5px 10px;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.nav-item input {
+  width: 150px;
+}
+
+#myDecks,
+#home,
+#searchBtn {
+  color: aliceblue;
+  background-color: #3498db;
+  border-radius: 5px;
+}
+
+#myDecks:hover,
+#home:hover,
+#searchBtn:hover {
+  background-color: #2980b9;
+}
+
+#myDecks:active,
+#home:active,
+#searchBtn:active {
+  background-color: #1f618d;
+}
+textarea {
+  width: 400px;
+  height: 250px;
+  background-color: rgb(245, 245, 174);
+
+  border: none;
+  border-radius: 5px;
+}
+#content {
+  margin-top: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+ul {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+li {
+  width: 500px;
+  background-color: rgb(207, 207, 0);
+  border-radius: 5px;
+  list-style-type: none;
+  box-shadow: 0 12px 18px rgba(0, 0, 0, 0.425);
+}
+#content button {
+  border: none;
+  border-radius: 5px;
+  color: aliceblue;
+  background-color: #1f618d00;
+
+  height: 30px;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: larger;
+}
+
+.dropDown {
+  position: relative;
+  display: inline-block;
+  justify-content: flex-end;
+}
+
+#dropdownBtn {
+  color: #fff;
+  padding: 10px;
+  border: none;
+  cursor: pointer;
+  height: 30px;
+  width: 30px;
+}
+
+.dropdownContent {
+  display: none;
+  position: absolute;
+  padding: 5px;
+  background-color: rgba(0, 0, 0, 0);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  min-width: 160px;
+  z-index: 1;
+}
+
+.dropdownContent button {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  text-align: left;
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+}
+
+.dropdownContent button:hover {
+  background-color: #1f618d;
+  border-radius: 0px;
+}
+
+.dropDown:hover .dropdownContent {
+  display: block;
+}

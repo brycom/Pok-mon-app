@@ -54,12 +54,18 @@ public class pokiDeckController {
 
     }
 
-    @PostMapping("/newDeck")
-    public PokiDeck newDeck(@AuthenticationPrincipal UserDetails userDetails) {
+    @GetMapping("/decks")
+    public Iterable<PokiDeck> getDecks() {
 
-        Optional<User> userO = userRepository.findByUsername(userDetails.getUsername());
+        return pokiDeckRepository.findAll();
+    }
+
+    @PostMapping("/newDeck/{name}")
+    public PokiDeck newDeck(/* @AuthenticationPrincipal UserDetails userDetails */ @PathVariable String name) {
+
+        Optional<User> userO = userRepository.findByUsername("mathias");
         User user = userO.orElse(null);
-        PokiDeck pokiDeck = new PokiDeck(user.getId());
+        PokiDeck pokiDeck = new PokiDeck(user.getId(), name);
         pokiDeckRepository.save(pokiDeck);
 
         return pokiDeck;
@@ -67,8 +73,9 @@ public class pokiDeckController {
 
     @PostMapping("/addPokemon")
     public Pokemon addPokemon(@RequestBody Pokemon Pokemon) {
-        Pokemon p = new Pokemon(Pokemon.getUrl(), 2);
+        Pokemon p = new Pokemon(Pokemon.getUrl(), Pokemon.getDeckId());
         pokemonRepository.save(p);
+        System.out.println(Pokemon.getDeckId());
 
         return p;
     }
@@ -83,13 +90,13 @@ public class pokiDeckController {
     }
 
     @PatchMapping("/addComment/{id}")
-    public Optional<Pokemon> addComment(@PathVariable int id, @RequestBody String comment) {
+    public Pokemon addComment(@PathVariable int id, @RequestBody String comment) {
         Optional<Pokemon> pokemon = pokemonRepository.findById(id);
         Pokemon p = pokemon.orElse(null);
         p.setComment(comment);
         pokemonRepository.save(p);
 
-        return pokemon;
+        return p;
     }
 
 }

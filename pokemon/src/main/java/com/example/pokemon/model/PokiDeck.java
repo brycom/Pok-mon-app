@@ -13,10 +13,20 @@ public class PokiDeck {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     int id;
+    String name;
     UUID userId;
 
-    public PokiDeck(UUID userId) {
+    public PokiDeck(UUID userId, String name) {
         this.userId = userId;
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public PokiDeck() {
