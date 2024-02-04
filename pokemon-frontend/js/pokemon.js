@@ -33,6 +33,7 @@ function getPokiInfo(pokemon) {
       return res.json();
     })
     .then((data) => {
+      pokemon;
       let li = document.createElement("li");
       let h2 = document.createElement("h2");
       let img = document.createElement("img");
@@ -45,7 +46,6 @@ function getPokiInfo(pokemon) {
       dropDownBtn.id = "dropDownBtn";
       dropDownBtn.innerText = "Menu";
 
-      info.innerText = pokemon.comment;
       dropDownContainer.append(dropDownBtn, dropDown);
 
       img.src = data.sprites.front_default;
@@ -53,10 +53,10 @@ function getPokiInfo(pokemon) {
       li.append(h2, img, dropDownContainer, info);
       listOfPokemons.appendChild(li);
       if (pokemonList.includes(pokemon)) {
+        info.innerText = pokemon.comment;
         deleteFromMyDeck(pokemon, li, dropDown);
         addComment(pokemon, info, dropDown);
       } else {
-        console.log("det här borde du inte se????");
         addToMyDeck(pokemon, dropDown);
       }
     })
@@ -103,6 +103,7 @@ function yourPokiDeck(deckId) {
 }
 function addToMyDeck(pokemon, parent) {
   decks.forEach((deck) => {
+    console.log("här igen");
     let addbtn = document.createElement("button");
     addbtn.innerText = "Lägg till i " + deck.name;
 
@@ -121,9 +122,7 @@ function addToMyDeck(pokemon, parent) {
         body: JSON.stringify(bodyData)
       })
         .then((response) => response.json())
-        .then((data) => {
-          console.log(data);
-        });
+        .then((data) => {});
     });
   });
 }
@@ -138,7 +137,7 @@ function deleteFromMyDeck(pokemon, parent, dropDown) {
     fetch("http://localhost:8080/api/pokiDeck/deletePokemon/" + pokemon.id, {
       method: "DELETE"
     });
-    console.log("Deleted");
+
     listOfPokemons.removeChild(parent);
   });
 }
@@ -176,8 +175,12 @@ searchBtn.addEventListener("click", () => {
     getPekiList();
   } else {
     listOfPokemons.innerHTML = "";
-    getPokiInfo("https://pokeapi.co/api/v2/pokemon/" + searchField.value);
-    console.log(searchField.value);
+
+    let pokemon = {
+      url:
+        "https://pokeapi.co/api/v2/pokemon/" + searchField.value.toLowerCase()
+    };
+    getPokiInfo(pokemon);
   }
   searchField.value = "";
 });
@@ -187,11 +190,14 @@ searchField.addEventListener("keypress", (e) => {
     if (searchField.value == "") {
       listOfPokemons.innerHTML = "";
       getPokiList();
-      console.log("i if");
     } else {
-      console.log("i else");
       listOfPokemons.innerHTML = "";
-      getPokiInfo("https://pokeapi.co/api/v2/pokemon/" + searchField.value);
+
+      let pokemon = {
+        url:
+          "https://pokeapi.co/api/v2/pokemon/" + searchField.value.toLowerCase()
+      };
+      getPokiInfo(pokemon);
       console.log(searchField.value);
     }
     searchField.value = "";
@@ -204,11 +210,14 @@ homeBtn.addEventListener("click", () => {
 
 newDeckBtn.addEventListener("click", () => {
   if (newDeckContainer.querySelector("input")) {
+    let btn = document.getElementById("addDeckBtn");
     newDeckContainer.removeChild(newDeckContainer.querySelector("input"));
+    newDeckContainer.removeChild(btn);
   } else {
     let input = document.createElement("input");
     let button = document.createElement("button");
     button.innerText = "Lägg till";
+    button.id = "addDeckBtn";
     input.setAttribute("type", "text");
     input.setAttribute("placeholder", "Namn:");
     newDeckContainer.append(input, button);
@@ -221,7 +230,7 @@ newDeckBtn.addEventListener("click", () => {
       })
         .then((response) => response.json())
         .then((data) => {
-          console.log(data);
+          input.value = "";
           getAllDecks();
         });
     });

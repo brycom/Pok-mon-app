@@ -24,34 +24,27 @@ nav {
   cursor: pointer;
   border-radius: 5px;
 }
-
-.nav-item input {
-  width: 150px;
+#searchField {
+  background-color: white;
 }
 
-#myDecks,
-#home,
-#searchBtn {
+.nav-item {
   color: aliceblue;
   background-color: #3498db;
   border-radius: 5px;
 }
 
-#myDecks:hover,
-#home:hover,
-#searchBtn:hover {
+.nav-item:hover {
   background-color: #2980b9;
 }
 
-#myDecks:active,
-#home:active,
-#searchBtn:active {
+.nav-item:active {
   background-color: #1f618d;
 }
 textarea {
   width: 400px;
   height: 250px;
-  background-color: rgb(245, 245, 174);
+  background-color: rgb(243, 243, 243);
 
   border: none;
   border-radius: 5px;
@@ -79,7 +72,7 @@ li {
   border: none;
   border-radius: 5px;
   color: aliceblue;
-  background-color: #1f618d00;
+  background-color: #1f618d83;
 
   height: 30px;
   padding: 20px;
@@ -88,21 +81,6 @@ li {
   justify-content: center;
   font-family: Arial, Helvetica, sans-serif;
   font-size: larger;
-}
-
-.dropDown {
-  position: relative;
-  display: inline-block;
-  justify-content: flex-end;
-}
-
-#dropdownBtn {
-  color: #fff;
-  padding: 10px;
-  border: none;
-  cursor: pointer;
-  height: 30px;
-  width: 30px;
 }
 
 .dropdownContent {
@@ -123,11 +101,6 @@ li {
   border: none;
   background-color: transparent;
   cursor: pointer;
-}
-
-.dropdownContent button:hover {
-  background-color: #1f618d;
-  border-radius: 0px;
 }
 
 .dropDown:hover .dropdownContent {
