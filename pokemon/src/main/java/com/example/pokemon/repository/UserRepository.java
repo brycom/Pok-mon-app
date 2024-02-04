@@ -7,6 +7,6 @@ import org.springframework.data.repository.CrudRepository;
 
 import com.example.pokemon.model.User;
 
-public interface UserRepository extends CrudRepository<User, Integer> {
+public interface UserRepository extends CrudRepository<User, UUID> {
     Optional<User> findByUsername(String username);
 }

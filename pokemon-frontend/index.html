@@ -4,10 +4,21 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script src="/js/pokemon.js" defer></script>
+    <link rel="stylesheet" href="index.css" />
     <title>Document</title>
   </head>
   <body>
-    <input id="searchField" type="text" placeholder="Sök" />
-    <button id="searchBtn">Sök</button>
+    <nav>
+      <div id="newDeckContainer">
+        <button class="nav-item" id="newDeck">Ny deck</button>
+      </div>
+      <div id="myDecks">
+        <button class="nav-item" id="myDecks">Miana decks</button>
+      </div>
+      <button class="nav-item" id="home">Star sida</button>
+      <input class="nav-item" id="searchField" type="text" placeholder="Sök" />
+      <button class="nav-item" id="searchBtn">Sök</button>
+    </nav>
+    <div id="content"></div>
   </body>
 </html>

@@ -1,7 +1,6 @@
 package com.example.pokemon.api;
 
 import java.util.ArrayList;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -13,8 +12,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.pokemon.model.User;
 import com.example.pokemon.repository.UserRepository;
-
-import ch.qos.logback.core.model.Model;
 
 @RestController
 @RequestMapping("/api")
@@ -32,7 +29,7 @@ public class UserController {
 
     @GetMapping("/users")
     public String getUser() {
-        return "nu fungerar det din lilla filur!!!";
+        return "hej";
     }
 
     @PostMapping("/newUser")
